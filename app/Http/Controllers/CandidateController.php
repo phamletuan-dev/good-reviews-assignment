@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Constants;
+use App\Models\Candidate;
+use App\Http\Requests\StoreCandidateRequest;
 
 class CandidateController extends Controller
 {
@@ -13,17 +16,19 @@ class CandidateController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $candidates = Candidate::all();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        try {
+            return response()->json([
+                'status' => Constants::HTTP_RESPONSE_SUCCESSFULLY,
+                'candidates' => $candidates
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -32,9 +37,24 @@ class CandidateController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreCandidateRequest $request)
     {
-        //
+        try {
+            $input = $request->all();
+
+            $candidate = Candidate::create($input);
+
+            return response()->json([
+                'status' => Constants::HTTP_RESPONSE_SUCCESSFULLY,
+                'message' => 'Create candidate successfully!',
+                'candidateId' => $candidate->id
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -43,20 +63,12 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Candidate $candidate)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+        return response()->json([
+            'status' => Constants::HTTP_RESPONSE_SUCCESSFULLY,
+            'candidate' => $candidate
+        ]);
     }
 
     /**
@@ -66,9 +78,23 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(StoreCandidateRequest $request, Candidate $candidate)
     {
-        //
+        try {
+            $input = $request->all();
+            $candidate->update($input);
+
+            return response()->json([
+                'status' => Constants::HTTP_RESPONSE_SUCCESSFULLY,
+                'message' => 'Update candidate successfully!',
+                'candidateId' => $candidate->id
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 
     /**
@@ -77,8 +103,20 @@ class CandidateController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Candidate $candidate)
     {
-        //
+        try {
+            $candidate->delete();
+
+            return response()->json([
+                'status' => Constants::HTTP_RESPONSE_SUCCESSFULLY,
+                'message' => 'Delete candidate successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => $e->getStatusCode(),
+                'message' => $e->getMessage()
+            ]);
+        }
     }
 }
