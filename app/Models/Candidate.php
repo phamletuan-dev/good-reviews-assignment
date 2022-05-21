@@ -8,11 +8,8 @@ class Candidate extends Model
 {
     protected $fillable = [
         'name',
-        'email',
-        'password',
-        'birthday',
+        'age',
         'gender',
-        'avatar',
-        'cover_image',
+        'job_title',
     ];
 }

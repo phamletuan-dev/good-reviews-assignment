@@ -16,7 +16,7 @@ class CreateCandidatesTable extends Migration
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('age');
+            $table->integer('age')->nullable();
             $table->tinyInteger('gender');
             $table->tinyInteger('job_title');
             $table->timestamps();
